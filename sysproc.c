@@ -95,3 +95,9 @@ sys_getHelloWorld(void)
 {
   return getHelloWorld();
 }
+
+int 
+sys_getProcCount(void)
+{
+  return getProcCount();
+}

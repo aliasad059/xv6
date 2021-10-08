@@ -534,7 +534,22 @@ procdump(void)
 }
 
 int
-getHelloWorld(void){
+getHelloWorld(void)
+{
   cprintf("Hello World!\n");
   return 0;
+}
+
+int
+getProcCount(void)
+{
+  int counter = 0;
+  struct proc *p;
+
+  for(p = ptable.proc; p < &ptable.proc[NPROC]; p++){
+    if(p->state != UNUSED){
+      counter++;
+    }
+  }
+  return counter;
 }
