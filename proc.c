@@ -88,6 +88,7 @@ allocproc(void)
 found:
   p->state = EMBRYO;
   p->pid = nextpid++;
+  p->readid = 0;
 
   release(&ptable.lock);
 
@@ -552,4 +553,16 @@ getProcCount(void)
     }
   }
   return counter;
+}
+
+int
+getReadCount(void)
+{
+  int counter = 0;
+  struct proc *p;
+
+  for(p = ptable.proc; p < &ptable.proc[NPROC]; p++)
+    counter = counter + p->readid;
+
+return counter;
 }
