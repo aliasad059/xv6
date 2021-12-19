@@ -89,7 +89,8 @@ found:
   p->state = EMBRYO;
   p->pid = nextpid++;
   p->readid = 0;
-
+  p->stc_top = -1;       // initialize stack top to -1 (illegal value)
+  p->threads_count = -1; // initialize stack top to -1 (illegal value)
   release(&ptable.lock);
 
   // Allocate kernel stack.
@@ -266,6 +267,17 @@ exit(void)
   curproc->state = ZOMBIE;
   sched();
   panic("zombie exit");
+}
+
+int
+check_pgdir_share(struct proc *process)
+{
+  struct proc *p;
+  for(p = ptable.proc; p < &ptable.proc[NPROC]; p++){
+    if(p!= process && p->pgdir == process->pgdir)
+      return 0;
+  }
+  return 1;
 }
 
 // Wait for a child process to exit and return its pid.
@@ -565,4 +577,58 @@ getReadCount(void)
     counter = counter + p->readid;
 
 return counter;
+}
+
+int
+thread_create(void* stack)
+{
+  int i, pid;
+  struct proc *np; //the new thread
+  struct proc *curproc = myproc();
+
+  // Allocate process.
+  if((np = allocproc()) == 0){
+    return -1;
+  }
+
+  curproc->threads_count++;
+  
+  np->stc_top =(int)((char*)stack + PGSIZE);
+
+  acquire(&ptable.lock);
+  np->pgdir = curproc->pgdir;
+  np->sz = curproc->sz;
+  release(&ptable.lock);
+
+  int bytesOnStack = curproc->stc_top - curproc->tf->esp;
+  np->tf->esp = np->stc_top - bytesOnStack;
+  memmove((void*)np->tf->esp, (void*)curproc->tf->esp, bytesOnStack);
+
+  np->parent = curproc;
+  *np->tf = *curproc->tf;
+
+  // Clear %eax so that fork returns 0 in the child.
+  np->tf->eax = 0;
+
+  // updating stack pointer register
+  np->tf->esp = np->stc_top - bytesOnStack;
+  // updating base pointer register
+  np->tf->ebp = np->stc_top -(curproc->stc_top - curproc->tf->ebp);
+
+  for(i = 0; i < NOFILE; i++)
+    if(curproc->ofile[i])
+      np->ofile[i] = filedup(curproc->ofile[i]);
+  np->cwd = idup(curproc->cwd);
+
+  safestrcpy(np->name, curproc->name, sizeof(curproc->name));
+
+  pid = np->pid;
+
+  acquire(&ptable.lock);
+
+  np->state = RUNNABLE;
+
+  release(&ptable.lock);
+
+  return pid;
 }
