@@ -170,12 +170,16 @@ growproc(int n)
   sz = curproc->sz;
   if(n > 0){
     if((sz = allocuvm(curproc->pgdir, sz, sz + n)) == 0)
-      release(&thread_lock);
-      return -1;
+      {
+        release(&thread_lock);
+        return -1;
+      }
   } else if(n < 0){
     if((sz = deallocuvm(curproc->pgdir, sz, sz + n)) == 0)
-      release(&thread_lock);
-      return -1;
+      {
+        release(&thread_lock);
+        return -1;
+      }
   }
   curproc->sz = sz;
   acquire(&ptable.lock);
@@ -207,7 +211,7 @@ growproc(int n)
       {
         if (p->parent == curproc && p->threads_count == -1)
         {
-          p->sz == curproc->sz;
+          p->sz = curproc->sz;
           numberOfChildern--;
         }
       }
@@ -241,6 +245,7 @@ fork(void)
     np->state = UNUSED;
     return -1;
   }
+  (np->threads_count)++;
   np->sz = curproc->sz;
   np->parent = curproc;
   *np->tf = *curproc->tf;
@@ -336,9 +341,14 @@ wait(void)
   for(;;){
     // Scan through table looking for exited children.
     havekids = 0;
-    for(p = ptable.proc; p < &ptable.proc[NPROC]; p++){
+    for(p = ptable.proc; p < &ptable.proc[NPROC]; p++)
+    {
       if(p->parent != curproc)
         continue;
+      
+      if (p->threads_count < 0)
+        continue;
+
       havekids = 1;
       if(p->state == ZOMBIE){
         // Found one.
@@ -366,7 +376,8 @@ wait(void)
     }
 
     // No point waiting if we don't have any children.
-    if(!havekids || curproc->killed){
+    if(!havekids || curproc->killed)
+    {
       release(&ptable.lock);
       return -1;
     }
@@ -632,7 +643,7 @@ return counter;
 }
 
 int
-thread_create(void* stack)
+thread_create(void *stack)
 {
   int i, pid;
   struct proc *np; //the new thread
@@ -708,7 +719,7 @@ thread_wait(void)
         kfree(p->kstack);
         p->kstack = 0;
 
-        if (check_pgdir_share())
+        if (check_pgdir_share(p))
           freevm(p->pgdir);
         
         p->pid = 0;

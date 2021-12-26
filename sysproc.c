@@ -107,3 +107,19 @@ sys_getReadCount(void)
 {
   return getReadCount();
 }
+
+int
+sys_thread_create(void)
+{
+  int stack;
+  if(argint(0,&stack) < 0){
+    return -1;
+  }
+  return thread_create((void *)stack);
+}
+
+int
+sys_thread_wait(void)
+{
+  return thread_wait();
+}

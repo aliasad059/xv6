@@ -23,3 +23,5 @@
 #define SYS_getHelloWorld   22
 #define SYS_getProcCount    23
 #define SYS_getReadCount    24
+#define SYS_thread_create   25
+#define SYS_thread_wait     26

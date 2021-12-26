@@ -19,7 +19,7 @@ int thread_creator(void (*fn)(void *), void *args)
     else
         stack = fptr + (PAGESIZE - mod);
 
-    int thread_id = clone((void *)stack);
+    int thread_id = thread_create((void *)stack);
 
     if (thread_id < 0)
         printf(1, "thread_create failed\n");
