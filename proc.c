@@ -398,36 +398,36 @@ wait(void)
 void
 scheduler(void)
 {
-  struct proc *p;
+  struct proc *p = ptable.proc;
   struct cpu *c = mycpu();
   c->proc = 0;
   
-  for(;;){
-    // Enable interrupts on this processor.
-    sti();
-
-    // Loop over process table looking for process to run.
-    acquire(&ptable.lock);
-    for(p = ptable.proc; p < &ptable.proc[NPROC]; p++){
-      if(p->state != RUNNABLE)
-        continue;
-
-      // Switch to chosen process.  It is the process's job
-      // to release ptable.lock and then reacquire it
-      // before jumping back to us.
-      c->proc = p;
-      switchuvm(p);
-      p->state = RUNNING;
-
-      swtch(&(c->scheduler), p->context);
-      switchkvm();
-
-      // Process is done running for now.
-      // It should have changed its p->state before coming back.
-      c->proc = 0;
-    }
-    release(&ptable.lock);
-
+  // TODO: set the correct policy using setPolicy system call
+  // TODO: set the correct policy at the run-time
+  int policy = 0;
+  
+  switch (policy)
+  {
+    case 1:
+        cprintf("set scheduling policy to round-robin.\n");
+        rr_policy(c, p, QUANTUM);
+        break;
+    case 2:
+        cprintf("set scheduling policy to priority.\n");
+        priority_policy(c, p);
+        break;
+    case 3:
+        cprintf("set scheduling policy to sml.\n");
+        sml_policy(c, p);
+        break;
+    case 4:
+        cprintf("set scheduling policy to dml.\n");
+        dml_policy(c, p);
+        break;
+    default:
+        cprintf("set scheduling policy to defalut.\n");
+        default_policy(c, p);
+        break;
   }
 }
 
@@ -741,4 +741,63 @@ thread_wait(void)
     // Wait for children to exit.  (See wakeup1 call in proc_exit.)
     sleep(curproc, &ptable.lock);  //DOC: wait-sleep
   }
+}
+
+void
+default_policy(struct cpu *c, struct proc *p) //round robin scheduling policy with quantum=1
+{
+  rr_policy(c, p, 1);
+}
+
+void
+rr_policy(struct cpu *c, struct proc *p, int quantum) //round robin scheduling policy with quantum=QUANTUM
+{
+  for(;;){
+      // Enable interrupts on this processor.
+      sti();
+
+      // Loop over process table looking for process to run.
+      acquire(&ptable.lock);
+      for(p = ptable.proc; p < &ptable.proc[NPROC]; p++){
+        if(p->state != RUNNABLE)
+          continue;
+
+        // Switch to chosen process.  It is the process's job
+        // to release ptable.lock and then reacquire it
+        // before jumping back to us.
+        c->proc = p;
+        switchuvm(p);
+        p->state = RUNNING;
+
+        swtch(&(c->scheduler), p->context);
+
+        for (int i = 0; i < quantum; i++)
+        {
+          switchkvm();
+        }
+        
+        // Process is done running for now.
+        // It should have changed its p->state before coming back.
+        c->proc = 0;
+      }
+      release(&ptable.lock);
+  }
+}
+
+void
+priority_policy(struct cpu *c, struct proc *p) //priority scheduling policy
+{
+  // TODO: complete the implementation
+}
+
+void
+sml_policy(struct cpu *c, struct proc *p) //static multilevel feedback queue scheduling policy
+{
+  // TODO: complete the implementation
+}
+
+void
+dml_policy(struct cpu *c, struct proc *p) //dynamic multilevel feedback queue scheduling policy
+{
+  // TODO: complete the implementation
 }

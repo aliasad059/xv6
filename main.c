@@ -7,7 +7,7 @@
 #include "x86.h"
 
 static void startothers(void);
-static void mpmain(void)  __attribute__((noreturn));
+static void mpmain(void);
 extern pde_t *kpgdir;
 extern char end[]; // first address after kernel loaded from ELF file
 

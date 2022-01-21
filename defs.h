@@ -112,7 +112,7 @@ struct cpu*     mycpu(void);
 struct proc*    myproc();
 void            pinit(void);
 void            procdump(void);
-void            scheduler(void) __attribute__((noreturn));
+void            scheduler(void);
 void            sched(void);
 void            setproc(struct proc*);
 void            sleep(void*, struct spinlock*);
@@ -124,8 +124,12 @@ int             getHelloWorld(void);
 int             getProcCount(void);
 int             getReadCount(void);
 int             thread_create(void* stack);
-// int             thread_creator(void (*fn)(void *), void *args);
-int             thread_wait(void);      
+int             thread_wait(void);
+void            default_policy(struct cpu *c, struct proc *p);
+void            rr_policy(struct cpu *c, struct proc *p, int quantum);
+void            priority_policy(struct cpu *c, struct proc *p);    
+void            sml_policy(struct cpu *c, struct proc *p);    
+void            dml_policy(struct cpu *c, struct proc *p);    
 
 // swtch.S
 void            swtch(struct context**, struct context*);
