@@ -128,8 +128,9 @@ int             thread_wait(void);
 void            default_policy(struct cpu *c, struct proc *p);
 void            rr_policy(struct cpu *c, struct proc *p, int quantum);
 void            priority_policy(struct cpu *c, struct proc *p);    
-void            sml_policy(struct cpu *c, struct proc *p);    
-void            dml_policy(struct cpu *c, struct proc *p);    
+void            sml_policy(struct cpu *c, struct proc *p);
+void            dml_policy(struct cpu *c, struct proc *p);
+int             set_priority(int, int);
 
 // swtch.S
 void            swtch(struct context**, struct context*);

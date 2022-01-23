@@ -789,8 +789,8 @@ priority_policy(struct cpu *c, struct proc *p) //priority scheduling policy
 {
   // TODO: complete the implementation
     struct proc *p;
-  struct cpu *c = mycpu();
-  c->proc = 0;
+    struct cpu *c = mycpu();
+    c->proc = 0;
   
   struct proc *selected_proces;
   int max_priority;
@@ -843,4 +843,25 @@ void
 dml_policy(struct cpu *c, struct proc *p) //dynamic multilevel feedback queue scheduling policy
 {
   // TODO: complete the implementation
+}
+
+
+// Change priority of a process
+int
+set_priority(int new_priority, int pid)
+{ 
+  if(new_priority < 0 || new_priority > 6){
+    return -1;
+  }
+  struct proc *p;
+  acquire(&ptable.lock);
+  for(p = ptable.proc; p < &ptable.proc[NPROC]; p++){
+    if(p->state == UNUSED || p->state == ZOMBIE || p->pid != pid){
+      continue;
+    }    
+    p->priority = new_priority;
+    break;
+  }
+  release(&ptable.lock);
+  return 0;
 }
