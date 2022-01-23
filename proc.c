@@ -402,33 +402,37 @@ scheduler(void)
   struct proc *p = ptable.proc;
   struct cpu *c = mycpu();
   c->proc = 0;
+  struct proc *selected_proces;
+  int max_priority;
   
   // TODO: set the correct policy using setPolicy system call
   // TODO: set the correct policy at the run-time
   int policy = 0;
   
-  switch (policy)
-  {
-    case 1:
-        cprintf("set scheduling policy to round-robin.\n");
-        rr_policy(c, p, QUANTUM);
-        break;
-    case 2:
-        cprintf("set scheduling policy to priority.\n");
-        priority_policy(c, p);
-        break;
-    case 3:
-        cprintf("set scheduling policy to sml.\n");
-        sml_policy(c, p);
-        break;
-    case 4:
-        cprintf("set scheduling policy to dml.\n");
-        dml_policy(c, p);
-        break;
-    default:
-        cprintf("set scheduling policy to defalut.\n");
-        default_policy(c, p);
-        break;
+  for(;;){
+    switch (policy)
+    {
+      case 1:
+          cprintf("set scheduling policy to round-robin.\n");
+          rr_policy(c, p, QUANTUM);
+          break;
+      case 2:
+          cprintf("set scheduling policy to priority.\n");
+          priority_policy(c, p, selected_proces, max_priority);
+          break;
+      case 3:
+          cprintf("set scheduling policy to sml.\n");
+          sml_policy(c, p);
+          break;
+      case 4:
+          cprintf("set scheduling policy to dml.\n");
+          dml_policy(c, p);
+          break;
+      default:
+          cprintf("set scheduling policy to defalut.\n");
+          default_policy(c, p);
+          break;
+    }
   }
 }
 
@@ -786,18 +790,8 @@ rr_policy(struct cpu *c, struct proc *p, int quantum) //round robin scheduling p
 }
 
 void
-priority_policy(struct cpu *c, struct proc *p) //priority scheduling policy
-{
-  // TODO: complete the implementation
-    struct proc *p;
-    struct cpu *c = mycpu();
-    c->proc = 0;
-  
-  struct proc *selected_proces;
-  int max_priority;
-
-  
-  for(;;){
+priority_policy(struct cpu *c, struct proc *p, struct proc *selected_proces, int max_priority) //priority scheduling policy
+{    
     // Enable interrupts on this processor.
     sti();
     max_priority = 7;
@@ -831,7 +825,6 @@ priority_policy(struct cpu *c, struct proc *p) //priority scheduling policy
         c->proc = 0;
       }
       release(&ptable.lock);
-  }
 }
 
 void
