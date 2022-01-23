@@ -94,6 +94,7 @@ found:
   p->readid = 0;
   p->stc_top = -1;       // initialize stack top to -1 (illegal value)
   p->threads_count = -1; // initialize stack top to -1 (illegal value)
+  p->priority = 3; // Set Default Priority
   release(&ptable.lock);
 
   // Allocate kernel stack.
