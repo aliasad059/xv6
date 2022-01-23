@@ -52,6 +52,7 @@ struct proc {
   int readid;                  // Counts how many times a process called Read syscall
   int stc_top;                 // Stack top pointer
   int threads_count;           // Counts all the threads that a process has created
+  int priority;                // Process priority for scheduling
 };
 
 // Process memory is laid out contiguously, low addresses first:
