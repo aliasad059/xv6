@@ -799,7 +799,7 @@ priority_policy(struct cpu *c, struct proc *p) //priority scheduling policy
   for(;;){
     // Enable interrupts on this processor.
     sti();
-    max_priority = 256;
+    max_priority = 7;
     selected_proces = 0;
 
     // Loop over process table looking for process to run.
