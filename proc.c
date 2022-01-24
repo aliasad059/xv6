@@ -96,6 +96,11 @@ found:
   p->threads_count = -1; // initialize stack top to -1 (illegal value)
   p->priority = 3;       // Set Default Priority
   p->remain_q = 7 - 3;   // quantum time of each process is 7 - priority
+  p->ct = ticks;
+  p->rt = 0;
+  p->wt = 0;
+  p->st = 0;
+  p->tt = 0;
   release(&ptable.lock);
 
   // Allocate kernel stack.
@@ -944,4 +949,20 @@ set_priority(int new_priority, int pid)
   }
   release(&ptable.lock);
   return 0;
+}
+
+void
+updateTimes()
+{
+  acquire(&ptable.lock);
+  struct proc *p;
+  for(p = ptable.proc; p < &ptable.proc[NPROC]; p++){
+    if (p->state == RUNNING)
+      p->rt++;
+    else if (p->state == RUNNABLE)
+      p->wt++;
+    else if (p->state == SLEEPING)
+      p->st++;
+  }
+  release(&ptable.lock);
 }

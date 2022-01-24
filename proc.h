@@ -54,6 +54,11 @@ struct proc {
   int threads_count;           // Counts all the threads that a process has created
   int priority;                // Process priority for scheduling
   int remain_q;                // Remaining Quantum
+  int ct;                      // Creation time
+  int rt;                      // Running time
+  int wt;                      // Waiting time
+  int st;                      // Sleeping time
+  int tt;                      // Ternimation time
 };
 
 // Process memory is laid out contiguously, low addresses first:
