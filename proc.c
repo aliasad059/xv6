@@ -413,7 +413,7 @@ scheduler(void)
   
   // TODO: set the correct policy using setPolicy system call
   // TODO: set the correct policy at the run-time
-  int policy = 0;
+  int policy = current_policy;
   
   for(;;){
     switch (policy)
