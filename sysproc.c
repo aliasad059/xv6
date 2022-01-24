@@ -123,3 +123,15 @@ sys_thread_wait(void)
 {
   return thread_wait();
 }
+
+
+int
+sys_set_priority(int new_priority, int pid){
+  return set_priority(new_priority, pid);
+}
+
+
+int
+sys_change_policy(int new_policy){
+  return change_policy(new_policy);
+}

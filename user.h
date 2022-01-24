@@ -44,3 +44,4 @@ void free(void*);
 int atoi(const char*);
 int thread_creator(void (*fn)(void *), void *args);
 int set_priority(int, int);
+int change_policy(int);

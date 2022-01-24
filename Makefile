@@ -187,6 +187,8 @@ UPROGS=\
 	_threadsTest\
 	_threadsTest2\
 	_threadsTest3\
+	_setPriority\
+	_changePolicy\
 
 fs.img: mkfs README $(UPROGS)
 	./mkfs fs.img README $(UPROGS)
@@ -265,6 +267,8 @@ EXTRA=\
 	threadsTest.c\
 	threadsTest2.c\
 	_threadsTest3.c\
+	setPriority.c\
+	changePolicy.c\
 
 dist:
 	rm -rf dist

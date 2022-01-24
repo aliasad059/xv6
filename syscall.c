@@ -7,6 +7,11 @@
 #include "x86.h"
 #include "syscall.h"
 
+
+// scheduler policy
+int current_policy = 0;
+
+
 // User code makes a system call with INT T_SYSCALL.
 // System call number in %eax.
 // Arguments on the stack, from the user call to the C
@@ -108,6 +113,8 @@ extern int sys_getProcCount(void);
 extern int sys_getReadCount(void);
 extern int sys_thread_create(void);
 extern int sys_thread_wait(void);
+extern int sys_set_priority(int, int);
+extern int sys_change_policy(int);
 
 static int (*syscalls[])(void) = {
 [SYS_fork]    sys_fork,
@@ -136,6 +143,8 @@ static int (*syscalls[])(void) = {
 [SYS_getReadCount] sys_getReadCount,    
 [SYS_thread_create]    sys_thread_create,
 [SYS_thread_wait]    sys_thread_wait,
+[SYS_SET_PRIORITY]   sys_set_priority,
+[SYS_CHANGE_POLICY]  sys_change_policy,
 };
 
 void

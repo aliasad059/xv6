@@ -25,3 +25,5 @@
 #define SYS_getReadCount    24
 #define SYS_thread_create   25
 #define SYS_thread_wait     26
+#define SYS_SET_PRIORITY    27
+#define SYS_CHANGE_POLICY   28

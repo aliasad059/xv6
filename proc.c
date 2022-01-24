@@ -998,3 +998,10 @@ wait_and_init(int *ct, int *rt, int *wt, int *st, int *tt, int *priority)
     sleep(curproc, &ptable.lock);  //DOC: wait-sleep
   }
 }
+
+
+
+int change_policy(int new_policy){
+  current_policy = new_policy;
+  return current_policy;
+}

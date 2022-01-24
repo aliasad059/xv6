@@ -170,6 +170,7 @@ int             argstr(int, char**);
 int             fetchint(uint, int*);
 int             fetchstr(uint, char**);
 void            syscall(void);
+extern int current_policy;
 
 // timer.c
 void            timerinit(void);
