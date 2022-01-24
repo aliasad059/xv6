@@ -127,10 +127,14 @@ int             thread_create(void* stack);
 int             thread_wait(void);
 void            default_policy(struct cpu *c, struct proc *p);
 void            rr_policy(struct cpu *c, struct proc *p, int quantum);
-void            priority_policy(struct cpu *c, struct proc *p, struct proc *selected_proces, int max_priority);    
+void            priority_policy(struct cpu *c, struct proc *p, struct proc *selected_proces, int max_priority, int quantum);    
 void            sml_policy(struct cpu *c, struct proc *p);
 void            dml_policy(struct cpu *c, struct proc *p);
 int             set_priority(int, int);
+void            updateTimes(void);
+struct proc*    getReadyProcess(void);
+void            runProcess(struct cpu *c, struct proc *p, int quantum);
+
 
 // swtch.S
 void            swtch(struct context**, struct context*);

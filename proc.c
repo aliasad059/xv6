@@ -812,7 +812,7 @@ sml_policy(struct cpu *c, struct proc *p) //static multilevel feedback queue sch
   // Loop over process table looking for process to run.
   acquire(&ptable.lock);
   p = getReadyProcess();
-  if (p >= 0)
+  if (p > 0)
   {
     runProcess(c, p , 1);
   }
@@ -856,7 +856,7 @@ getReadyProcess()
 
   if (best_p->state != RUNNABLE) // there is no runnable process
   {
-    return -1;
+    return 0;
   }
   
   for(p = ptable.proc; p < &ptable.proc[NPROC]; p++){
