@@ -53,6 +53,7 @@ struct proc {
   int stc_top;                 // Stack top pointer
   int threads_count;           // Counts all the threads that a process has created
   int priority;                // Process priority for scheduling
+  int remain_q;                // Remaining Quantum
 };
 
 // Process memory is laid out contiguously, low addresses first:

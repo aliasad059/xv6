@@ -94,7 +94,8 @@ found:
   p->readid = 0;
   p->stc_top = -1;       // initialize stack top to -1 (illegal value)
   p->threads_count = -1; // initialize stack top to -1 (illegal value)
-  p->priority = 3; // Set Default Priority
+  p->priority = 3;       // Set Default Priority
+  p->remain_q = 7 - 3;   // quantum time of each process is 7 - priority
   release(&ptable.lock);
 
   // Allocate kernel stack.
@@ -829,9 +830,94 @@ priority_policy(struct cpu *c, struct proc *p, struct proc *selected_proces, int
 
 void
 sml_policy(struct cpu *c, struct proc *p) //static multilevel feedback queue scheduling policy
-{
-  // TODO: complete the implementation
+{ 
+  //TODO: remember to update remaining quantum when a process's priority is changed
+  // Enable interrupts on this processor.
+  sti();
+
+  // Loop over process table looking for process to run.
+  acquire(&ptable.lock);
+  p = getReadyProcess();
+  if (p >= 0)
+  {
+    runProcess(c, p , 1);
+  }
+  release(&ptable.lock);
 }
+
+void
+runProcess(struct cpu *c, struct proc *p, int quantum)
+{
+  for (int i = 0; i < quantum; i++)
+  {
+    // Switch to chosen process.  It is the process's job
+    // to release ptable.lock and then reacquire it
+    // before jumping back to us.
+    c->proc = p;
+    switchuvm(p);
+    p->state = RUNNING;
+
+    swtch(&(c->scheduler), p->context);
+    
+    switchkvm();
+    
+    // Process is done running for now.
+    // It should have changed its p->state before coming back.
+    c->proc = 0;
+  }
+}
+
+struct proc*
+getReadyProcess()
+{
+  struct proc *best_p = ptable.proc;
+  struct proc *p;
+  for(p = ptable.proc; p < &ptable.proc[NPROC]; p++){ // find the first runnable process and init best_p
+      if(p->state != RUNNABLE)
+        continue;
+
+      best_p = p;
+      break;
+  }
+
+  if (best_p->state != RUNNABLE) // there is no runnable process
+  {
+    return -1;
+  }
+  
+  for(p = ptable.proc; p < &ptable.proc[NPROC]; p++){
+    if(p->state != RUNNABLE)
+      continue;
+    if (p->priority < best_p->priority)
+    {
+      best_p = p;
+    }
+    else if (p->priority == best_p->priority)
+    {
+      if (best_p->remain_q == 0 && p->remain_q > 0)
+      {
+        best_p = p;
+      }
+    }
+  }
+  
+  if (best_p->remain_q == 0)    // reset all the remaining quantum of the processes in the best_p queue
+  {
+    for(p = ptable.proc; p < &ptable.proc[NPROC]; p++){
+      if(p->state != RUNNABLE)
+        continue;
+      if (p->priority == best_p->priority)
+      {
+        p->remain_q = 7 - p->priority; 
+      }
+    }
+  }
+  
+  best_p->remain_q = best_p->remain_q - 1;
+  return best_p;
+}
+
+
 
 void
 dml_policy(struct cpu *c, struct proc *p) //dynamic multilevel feedback queue scheduling policy
