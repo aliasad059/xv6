@@ -124,14 +124,18 @@ sys_thread_wait(void)
   return thread_wait();
 }
 
-
 int
-sys_set_priority(int new_priority, int pid){
-  return set_priority(new_priority, pid);
+sys_set_priority(void){
+  int pid, priority;
+  if((argint(0, &priority) < 0) || (argint(1, &pid) < 0))
+    return -1;
+  return set_priority(priority, pid);
 }
 
-
 int
-sys_change_policy(int new_policy){
+sys_change_policy(void){
+  int new_policy;
+  if (argint(0, &new_policy) < 0)
+    return -1;
   return change_policy(new_policy);
 }

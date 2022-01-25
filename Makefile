@@ -266,7 +266,7 @@ EXTRA=\
 	getReadCountTest.c\
 	threadsTest.c\
 	threadsTest2.c\
-	_threadsTest3.c\
+	threadsTest3.c\
 	setPriority.c\
 	changePolicy.c\
 

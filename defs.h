@@ -134,6 +134,7 @@ int             set_priority(int, int);
 void            updateTimes(void);
 struct proc*    getReadyProcess(void);
 void            runProcess(struct cpu *c, struct proc *p, int quantum);
+int             change_policy(int);
 
 
 // swtch.S

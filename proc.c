@@ -408,15 +408,11 @@ scheduler(void)
   struct proc *p = ptable.proc;
   struct cpu *c = mycpu();
   c->proc = 0;
-  struct proc *selected_proces;
-  int max_priority;
-  
-  // TODO: set the correct policy using setPolicy system call
-  // TODO: set the correct policy at the run-time
-  int policy = current_policy;
-  
+  struct proc *selected_proces = ptable.proc;
+  int max_priority = 7;
+    
   for(;;){
-    switch (policy)
+    switch (current_policy)
     {
       case 1:
           cprintf("set scheduling policy to round-robin.\n");
