@@ -189,6 +189,7 @@ UPROGS=\
 	_threadsTest3\
 	_setPriority\
 	_changePolicy\
+	_roundRobinTest\
 
 fs.img: mkfs README $(UPROGS)
 	./mkfs fs.img README $(UPROGS)
@@ -269,6 +270,7 @@ EXTRA=\
 	threadsTest3.c\
 	setPriority.c\
 	changePolicy.c\
+	roundRobin.c\
 
 dist:
 	rm -rf dist

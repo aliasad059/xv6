@@ -30,6 +30,7 @@ int thread_create(void* stack);
 int thread_wait(void);
 int set_priority(int, int);
 int change_policy(int);
+int wait_and_init(int *, int *, int *, int *, int *, int *);
 
 // ulib.c
 int stat(const char*, struct stat*);
@@ -45,4 +46,3 @@ void* malloc(uint);
 void free(void*);
 int atoi(const char*);
 int thread_creator(void (*fn)(void *), void *args);
-int wait_and_init(int *, int *, int *, int *, int *, int *);

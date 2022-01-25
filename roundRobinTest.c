@@ -3,7 +3,7 @@
 #include "user.h"
 #define PROC_NUM 10
 
-int printReport(int pid[PROC_NUM], int cts[PROC_NUM], int rts[PROC_NUM], int wts[PROC_NUM], int sts[PROC_NUM], int tts[PROC_NUM])
+void printReport(int pid[PROC_NUM], int cts[PROC_NUM], int rts[PROC_NUM], int wts[PROC_NUM], int sts[PROC_NUM], int tts[PROC_NUM])
 {
     int bt_avg = 0, tat_avg = 0, wt_avg = 0;
     printf(1, "PID\tCBT\tWT\tTAT\n");
@@ -22,7 +22,7 @@ int printReport(int pid[PROC_NUM], int cts[PROC_NUM], int rts[PROC_NUM], int wts
     printf(1, "|%d|%d|%d|\n", bt_avg / PROC_NUM, wt_avg / PROC_NUM, tat_avg / PROC_NUM);
 }
 
-int doSomeWork(int pid)
+void doSomeWork(int pid)
 {
     for (int i = 1; i <= 1000; i++)
     {
@@ -32,7 +32,7 @@ int doSomeWork(int pid)
 
 int main()
 {
-    int pid[PROC_NUM], cts[PROC_NUM], rts[PROC_NUM], wts[PROC_NUM], sts[PROC_NUM], tts[PROC_NUM];
+    int pid[PROC_NUM], cts[PROC_NUM], rts[PROC_NUM], wts[PROC_NUM], sts[PROC_NUM], tts[PROC_NUM], ps[PROC_NUM];
 
     change_policy(1); // change scheduling policy into round robin
 
@@ -46,7 +46,7 @@ int main()
     }
     for (int i = 0; i < PROC_NUM; i++)
     {
-        pid[i] = wait_and_init(&cts[i], &rts[i], &wts[i], &sts[i], &tts[i]);
+        pid[i] = wait_and_init(&cts[i], &rts[i], &wts[i], &sts[i], &tts[i], &ps[i]);
     }
 
     printReport(pid, cts, rts, wts, sts, tts);

@@ -135,6 +135,7 @@ void            updateTimes(void);
 struct proc*    getReadyProcess(void);
 void            runProcess(struct cpu *c, struct proc *p, int quantum);
 int             change_policy(int);
+int             wait_and_init(int *, int *, int *, int *, int *, int *);
 
 
 // swtch.S

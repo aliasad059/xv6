@@ -115,6 +115,7 @@ extern int sys_thread_create(void);
 extern int sys_thread_wait(void);
 extern int sys_set_priority(void);
 extern int sys_change_policy(void);
+extern int sys_wait_and_init(void);
 
 static int (*syscalls[])(void) = {
 [SYS_fork]    sys_fork,
@@ -145,6 +146,7 @@ static int (*syscalls[])(void) = {
 [SYS_thread_wait]    sys_thread_wait,
 [SYS_set_priority]   sys_set_priority,
 [SYS_change_policy]  sys_change_policy,
+[SYS_wait_and_init]  sys_wait_and_init,
 };
 
 void

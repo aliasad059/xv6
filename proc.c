@@ -415,23 +415,23 @@ scheduler(void)
     switch (current_policy)
     {
       case 1:
-          cprintf("set scheduling policy to round-robin.\n");
+          // cprintf("set scheduling policy to round-robin.\n");
           rr_policy(c, p, QUANTUM);
           break;
       case 2:
-          cprintf("set scheduling policy to priority.\n");
+          // cprintf("set scheduling policy to priority.\n");
           priority_policy(c, p, selected_proces, max_priority, QUANTUM);
           break;
       case 3:
-          cprintf("set scheduling policy to sml.\n");
+          // cprintf("set scheduling policy to sml.\n");
           sml_policy(c, p);
           break;
       case 4:
-          cprintf("set scheduling policy to dml.\n");
+          // cprintf("set scheduling policy to dml.\n");
           dml_policy(c, p);
           break;
       default:
-          cprintf("set scheduling policy to defalut.\n");
+          // cprintf("set scheduling policy to defalut.\n");
           default_policy(c, p);
           break;
     }

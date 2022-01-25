@@ -139,3 +139,21 @@ sys_change_policy(void){
     return -1;
   return change_policy(new_policy);
 }
+
+int
+sys_wait_and_init(void){
+  int *creationtime, *runtime, *waittime, *sleepingtime, *terminationtime, *priority;
+  if(argptr(0, (void*)&creationtime, sizeof(creationtime)) < 0)
+    return -1;
+  if(argptr(1, (void*)&runtime, sizeof(runtime)) < 0)
+    return -1;
+  if(argptr(2, (void*)&waittime, sizeof(waittime)) < 0)
+    return -1;
+  if(argptr(3, (void*)&sleepingtime, sizeof(sleepingtime)) < 0)
+    return -1;
+  if(argptr(4, (void*)&terminationtime, sizeof(terminationtime)) < 0)
+    return -1;
+  if(argptr(5, (void*)&priority, sizeof(priority)) < 0)
+    return -1;
+  return wait_and_init(creationtime, runtime, waittime, sleepingtime, terminationtime, priority);
+}
