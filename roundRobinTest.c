@@ -34,7 +34,7 @@ int main()
 {
     int pid[PROC_NUM], cts[PROC_NUM], rts[PROC_NUM], wts[PROC_NUM], sts[PROC_NUM], tts[PROC_NUM];
 
-    // changePolicy(1);
+    change_policy(1); // change scheduling policy into round robin
 
     for (int i = 0; i < PROC_NUM; i++)
     {

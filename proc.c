@@ -801,7 +801,6 @@ priority_policy(struct cpu *c, struct proc *p, struct proc *selected_proces, int
 void
 sml_policy(struct cpu *c, struct proc *p) //static multilevel feedback queue scheduling policy
 { 
-  //TODO: remember to update remaining quantum when a process's priority is changed
   // Enable interrupts on this processor.
   sti();
 
@@ -898,7 +897,7 @@ int
 set_priority(int new_priority, int pid)
 { 
   if(new_priority < 0 || new_priority > 6){
-    return -1;
+    new_priority = 5;
   }
   struct proc *p;
   acquire(&ptable.lock);
@@ -907,6 +906,10 @@ set_priority(int new_priority, int pid)
       continue;
     }    
     p->priority = new_priority;
+    if (current_policy == 3)  // changing priority in sml policy means a process is moved to another queue, so we reset its remain_q
+    {
+      p->remain_q = 7 - p->priority;
+    }
     break;
   }
   release(&ptable.lock);
