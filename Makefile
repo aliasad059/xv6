@@ -190,6 +190,7 @@ UPROGS=\
 	_setPriority\
 	_changePolicy\
 	_roundRobinTest\
+	_prioritySchedTest\
 
 fs.img: mkfs README $(UPROGS)
 	./mkfs fs.img README $(UPROGS)
@@ -271,6 +272,7 @@ EXTRA=\
 	setPriority.c\
 	changePolicy.c\
 	roundRobin.c\
+	prioritySchedTest.c\
 
 dist:
 	rm -rf dist
