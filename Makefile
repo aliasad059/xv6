@@ -191,6 +191,8 @@ UPROGS=\
 	_changePolicy\
 	_roundRobinTest\
 	_prioritySchedTest\
+	_multiQueueSchedTest\
+	_multiDynamicQueueSchedTest\
 
 fs.img: mkfs README $(UPROGS)
 	./mkfs fs.img README $(UPROGS)
@@ -271,8 +273,11 @@ EXTRA=\
 	threadsTest3.c\
 	setPriority.c\
 	changePolicy.c\
-	roundRobin.c\
+	roundRobinTest.c\
 	prioritySchedTest.c\
+	multiQueueSchedTest.c\
+	multiDynamicQueueSchedTest.c\
+
 
 dist:
 	rm -rf dist

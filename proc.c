@@ -508,6 +508,11 @@ sleep(void *chan, struct spinlock *lk)
   if(lk == 0)
     panic("sleep without lk");
 
+
+  if(current_policy == 4){
+    p->priority = 1;
+  }
+
   // Must acquire ptable.lock in order to
   // change p->state and then call sched.
   // Once we hold ptable.lock, we can be
@@ -819,6 +824,13 @@ runProcess(struct cpu *c, struct proc *p, int quantum)
 {
   for (int i = 0; i < quantum; i++)
   {
+    // change priority if the current policy was 4
+    if(current_policy == 4 && p->remain_q == 0){
+      if(p->priority > 1){
+        p->priority = p->priority - 1;
+      }
+    }
+
     // Switch to chosen process.  It is the process's job
     // to release ptable.lock and then reacquire it
     // before jumping back to us.
@@ -889,7 +901,17 @@ getReadyProcess()
 void
 dml_policy(struct cpu *c, struct proc *p) //dynamic multilevel feedback queue scheduling policy
 {
-  // TODO: complete the implementation
+  // Enable interrupts on this processor.
+  sti();
+
+  // Loop over process table looking for process to run.
+  acquire(&ptable.lock);
+  p = getReadyProcess();
+  if (p > 0)
+  {
+    runProcess(c, p , 1);
+  }
+  release(&ptable.lock);
 }
 
 // Change priority of a process
